@@ -36,6 +36,7 @@ async function run() {
 
         const productCollection = client.db("productDB").collection("products");
         const userCollection = client.db("productDB").collection("users");
+        const cartProductCollection = client.db("productDB").collection("cartProducts");
 
         // Product api 
 
@@ -81,7 +82,7 @@ async function run() {
             res.send(result);
         });
 
-        // update single user
+        // update single product
 
         app.put("/products/:id", async (req, res) => {
             const id = req.params.id;
@@ -119,6 +120,58 @@ async function run() {
             console.log(result);
             res.send(result);
         });
+
+
+
+
+        // cart api 
+        // post cart product api endpoint 
+        app.post("/products/addToCart", async (req, res) => {
+            const cartProduct = req.body;
+            // const cartId = cartProduct.cartId;
+            // console.log(cartId);
+            console.log("cart Product:", cartProduct);
+            const result = await cartProductCollection.insertOne(cartProduct);
+            if (!result) {
+                return res.status(400).send("data not found");
+            };
+            res.send(result);
+        })
+
+        // get single cart product using id endpoint
+        app.get("/cartProducts/:id", async (req, res) => {
+            const id = req.params.id;
+            console.log("single id", id);
+            const query = {
+                _id: new ObjectId(id),
+            };
+            const result = await cartProductCollection.findOne(query);
+            console.log(result);
+            res.send(result);
+        });
+
+
+        // get cart product endpoint 
+
+        app.get("/cartProducts", async (req, res) => {
+            const result = await cartProductCollection.find().toArray();
+            console.log(result);
+            res.send(result);
+        });
+
+        // delete single product end point
+        app.delete(`/cartProducts/:id`, async (req, res) => {
+            const id = req.params.id;
+            console.log("deleted id", typeof (id), id);
+            const query = {
+                _id: new ObjectId(id),
+            };
+            const result = await cartProductCollection.deleteOne(query);
+            console.log(result);
+            res.send(result);
+        });
+
+
 
 
         // Send a ping to confirm a successful connection
