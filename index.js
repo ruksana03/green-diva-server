@@ -35,13 +35,16 @@ async function run() {
         await client.connect();
 
         const productCollection = client.db("productDB").collection("products");
+        const userCollection = client.db("productDB").collection("users");
+
+        // Product api 
 
         // post single product endpoint
         app.post("/products", async (req, res) => {
             const product = req.body;
             console.log("product", product);
             const result = await productCollection.insertOne(product);
-            console.log(result);
+            // console.log(result);
             res.send(result);
         });
 
@@ -61,7 +64,7 @@ async function run() {
                 _id: new ObjectId(id),
             };
             const result = await productCollection.deleteOne(query);
-            console.log(result);
+            // console.log(result);
             res.send(result);
         });
 
@@ -74,7 +77,7 @@ async function run() {
                 _id: new ObjectId(id),
             };
             const result = await productCollection.findOne(query);
-            console.log(result);
+            // console.log(result);
             res.send(result);
         });
 
@@ -91,11 +94,11 @@ async function run() {
                 $set: {
                     img: updatedProduct.img,
                     name: updatedProduct.name,
-                    brand : updatedProduct.brand,
-                    type : updatedProduct.type,
-                    price : updatedProduct.price,
-                    description :updatedProduct,
-                    rating :updatedProduct.rating
+                    brand: updatedProduct.brand,
+                    type: updatedProduct.type,
+                    price: updatedProduct.price,
+                    description: updatedProduct,
+                    rating: updatedProduct.rating
                 },
             };
             const result = await productCollection.updateOne(
@@ -106,7 +109,16 @@ async function run() {
             res.send(result);
         });
 
+        //  user api 
 
+        // post single user endpoint
+        app.post("/users", async (req, res) => {
+            const user = req.body;
+            console.log("user:", user);
+            const result = await userCollection.insertOne(user);
+            console.log(result);
+            res.send(result);
+        });
 
 
         // Send a ping to confirm a successful connection
