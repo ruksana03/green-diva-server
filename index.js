@@ -37,6 +37,7 @@ async function run() {
         const productCollection = client.db("productDB").collection("products");
         const userCollection = client.db("productDB").collection("users");
         const cartProductCollection = client.db("productDB").collection("cartProducts");
+        const branCollection = client.db("productDB").collection("brands");
 
         // Product api 
 
@@ -110,6 +111,52 @@ async function run() {
             res.send(result);
         });
 
+
+        // brand api
+
+        // post single brand endpoint
+        app.post("/brands", async (req, res) => {
+            const brand = req.body;
+            console.log("brands", brand);
+            const result = await branCollection.insertOne(brand);
+            // console.log(result);
+            res.send(result);
+        });
+
+        // get all brand endpoint 
+
+        app.get("/brands", async (req, res) => {
+            const result = await branCollection.find().toArray();
+            // console.log(result);
+            res.send(result);
+        });
+
+        // delete single brand end point
+        app.delete("/brands/:id", async (req, res) => {
+            const id = req.params.id;
+            console.log("id", id);
+            const query = {
+                _id: new ObjectId(id),
+            };
+            const result = await branCollection.deleteOne(query);
+            // console.log(result);
+            res.send(result);
+        });
+
+        // get single brand using id endpoint
+
+        app.get("/brands/:id", async (req, res) => {
+            const id = req.params.id;
+            console.log("id", id);
+            const query = {
+                _id: new ObjectId(id),
+            };
+            const result = await branCollection.findOne(query);
+            // console.log(result);
+            res.send(result);
+        });
+
+
         //  user api 
 
         // post single user endpoint
@@ -121,12 +168,16 @@ async function run() {
             res.send(result);
         });
 
-
+        app.get("/users", async (req, res) => {
+            const result = await userCollection.find().toArray();
+            // console.log(result);
+            res.send(result);
+        });
 
 
         // cart api 
         // post cart product api endpoint 
-        app.post("/products/addToCart", async (req, res) => {
+        app.post("addToCart", async (req, res) => {
             const cartProduct = req.body;
             // const cartId = cartProduct.cartId;
             // console.log(cartId);
