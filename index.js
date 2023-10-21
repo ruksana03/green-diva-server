@@ -99,7 +99,7 @@ async function run() {
                     brand: updatedProduct.brand,
                     type: updatedProduct.type,
                     price: updatedProduct.price,
-                    description: updatedProduct,
+                    description: updatedProduct.description,
                     rating: updatedProduct.rating
                 },
             };
@@ -177,7 +177,7 @@ async function run() {
 
         // cart api 
         // post cart product api endpoint 
-        app.post("addToCart", async (req, res) => {
+        app.post("/addToCart", async (req, res) => {
             const cartProduct = req.body;
             // const cartId = cartProduct.cartId;
             // console.log(cartId);
@@ -189,8 +189,16 @@ async function run() {
             res.send(result);
         })
 
+        // get all cart data 
+
+        app.get("/addToCart", async (req, res) => {
+            const result = await cartProductCollection.find().toArray();
+            // console.log(result);
+            res.send(result);
+        });
+
         // get single cart product using id endpoint
-        app.get("/cartProducts/:id", async (req, res) => {
+        app.get("/addToCart/:id", async (req, res) => {
             const id = req.params.id;
             console.log("single id", id);
             const query = {
@@ -202,16 +210,8 @@ async function run() {
         });
 
 
-        // get cart product endpoint 
-
-        app.get("/cartProducts", async (req, res) => {
-            const result = await cartProductCollection.find().toArray();
-            console.log(result);
-            res.send(result);
-        });
-
         // delete single product end point
-        app.delete(`/cartProducts/:id`, async (req, res) => {
+        app.delete("/addToCart/:id", async (req, res) => {
             const id = req.params.id;
             console.log("deleted id", typeof (id), id);
             const query = {
